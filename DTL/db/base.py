@@ -34,7 +34,7 @@ def obj_for_name(module_name, class_name):
     except KeyError:
         module = __import__(module_name, globals(), locals(), class_name)
         return getattr(module, class_name)
-    except Exception, e:
+    except Exception as e:
         raise Exception(e)
 
 #------------------------------------------------------------
@@ -136,7 +136,7 @@ class PropertiedClass(type):
                 if property_keys:
                     cls._properties.update(base.properties())
                     
-        for name, attr in dct.items():
+        for name, attr in list(dct.items()):
             if isinstance(attr, BaseProperty) or issubclass(attr.__class__, BaseProperty):
                 check_reserved_word(name)
                 cls._properties[name] = attr
@@ -155,9 +155,7 @@ class JsonBaseDataEncoder(json.JSONEncoder):
 
 #------------------------------------------------------------
 #------------------------------------------------------------
-class BaseData(object):
-    __metaclass__ = PropertiedClass
-    #------------------------------------------------------------
+class BaseData(object, metaclass=PropertiedClass):
     def __init__(self, parent=None, *args, **kwds):
         super(BaseData, self).__init__()
         apiUtils.synthesize(self, 'parent', parent)
@@ -238,7 +236,7 @@ class BaseData(object):
             return attr.__get__(self)
         except IndexError :
             pass
-        except Exception, e :
+        except Exception as e :
             raise Exception(e)
     
     #------------------------------------------------------------
@@ -248,7 +246,7 @@ class BaseData(object):
             attr.__set__(self,value.toPyObject())
         except IndexError :
             pass
-        except Exception, e:
+        except Exception as e:
             raise Exception(e)
     
     #------------------------------------------------------------
@@ -283,7 +281,7 @@ class BaseData(object):
     
     #------------------------------------------------------------
     def _readXml(self, current_node):
-        for prop in self.properties().values():
+        for prop in list(self.properties().values()):
             if current_node.hasAttribute(prop.name()):
                 attr_value = current_node.attribute(prop.name())
                 prop.__set__(self, attr_value)        
@@ -305,7 +303,7 @@ class BaseData(object):
         else:
             xml_doc.appendChild(node)
        
-        for k, v in self.properties().items():
+        for k, v in list(self.properties().items()):
             node.setAttribute(k, v)
         
         node.setAttribute('module_name', self.moduleInfo())
@@ -318,7 +316,7 @@ class BaseData(object):
     
     #------------------------------------------------------------
     def _readJson(self, json_data):
-        for prop in self.properties().values():
+        for prop in list(self.properties().values()):
             if prop.name in json_data:
                 prop_data = json_data[prop.name()]
                 prop.__set__(self, prop_data)        

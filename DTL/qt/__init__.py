@@ -55,7 +55,7 @@ import sys
 from .binding_helper import loadUi, wrapinstance, QT_BINDING, QT_BINDING_MODULES, QT_BINDING_VERSION  # @UnusedImport
 
 # register all binding modules as sub modules of this package (python_qt_binding) for easy importing
-for module_name, module in QT_BINDING_MODULES.items():
+for module_name, module in list(QT_BINDING_MODULES.items()):
     sys.modules[__name__ + '.' + module_name] = module
     setattr(sys.modules[__name__], module_name, module)
     del module_name

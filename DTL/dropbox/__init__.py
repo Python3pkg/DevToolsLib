@@ -1,1 +1,1 @@
-from core import Dropbox
+from .core import Dropbox

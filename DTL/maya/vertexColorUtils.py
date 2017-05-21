@@ -31,13 +31,13 @@ def vertColorAction(action='apply',rgba=[1,1,1,1],channelMatrix=[],blendMix=None
     if sel == None :
         sel = selection()
     try:
-        for obj in sel.selection.keys():
+        for obj in list(sel.selection.keys()):
             vertDict = sel.selection[obj][5]
             cmds.polyOptions(obj, cs=1, cm='none')
             progressCount = 1
             #Added the plus one so the dialogue to the user never reaches full  -  its a perception thing
             #cmds.progressWindow(edit=True,max=len(vertDict.keys())+1)
-            for colorKey, vertFaceList in vertDict.items():
+            for colorKey, vertFaceList in list(vertDict.items()):
                 #cmds.progressWindow( edit=True, progress=progressCount, status=('Processing - ' + str(len(vertFaceList)) + ' - Vertex Faces'))
                 if action == 'apply':
                     vertexColorApply(vertFaceList,rgba[0],rgba[1],rgba[2],rgba[3])
@@ -52,7 +52,7 @@ def vertColorAction(action='apply',rgba=[1,1,1,1],channelMatrix=[],blendMix=None
                         blendMix = cmds.floatSliderGrp('blendMixSlider',q=1,v=1)
                     vertexColorBlend(vertFaceList,colorKey,rgba[0],rgba[1],rgba[2],blendMix)
                 if action == 'average':
-                    vertexColorAvg(vertFaceList,colorKey,vertDict.keys())
+                    vertexColorAvg(vertFaceList,colorKey,list(vertDict.keys()))
                 if action == 'channel':
                     vertexColorChannelMix(vertFaceList,colorKey,channelMatrix)
                 if action == 'channelAlpha':
@@ -76,7 +76,7 @@ def vertexColorApply(vertList=None, red=1, green=1, blue=1, alpha=1 ):
     if vertList == None or vertList == []:
         return
     bufferSize = 2000
-    for begin in xrange(0, len(vertList), bufferSize):
+    for begin in range(0, len(vertList), bufferSize):
         vertBatch = vertList[begin: begin+bufferSize]
         cmds.polyColorPerVertex(vertBatch, r=red, g=green, b=blue, a=alpha)
 
@@ -202,5 +202,5 @@ def vertexColorChannelMixAlpha(vertList=None, currentRGBA=None, channelMatrix=[[
 def toggleVertColor():
     '''Util for toggling the vertex color per obj selected'''
     sel = selection()
-    for obj in sel.selection.keys():
+    for obj in list(sel.selection.keys()):
         cmds.polyOptions(obj,cs=1-cmds.polyOptions(obj,q=1,cs=1)[0],cm='none')

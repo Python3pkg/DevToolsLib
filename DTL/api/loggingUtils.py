@@ -1,6 +1,6 @@
 import os
 import sys
-import StringIO
+import io
 import logging
 import logging.handlers
 import sqlite3

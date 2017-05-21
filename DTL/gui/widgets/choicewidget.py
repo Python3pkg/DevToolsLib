@@ -46,6 +46,6 @@ class ChoiceWidget(Dialog):
     
 
 if __name__ == "__main__":
-    print ChoiceWidget.getChoice(msg='Choose a drive', choices=apiUtils.getDrives())
+    print(ChoiceWidget.getChoice(msg='Choose a drive', choices=apiUtils.getDrives()))
     
     

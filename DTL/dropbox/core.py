@@ -2,9 +2,7 @@ from dropbox import session, client
 
 from DTL.api import Path, apiUtils, loggingUtils
 
-class Dropbox(object):
-    __metaclass__ = loggingUtils.LoggingMetaclass
-    
+class Dropbox(object, metaclass=loggingUtils.LoggingMetaclass):
     def __init__(self, appKey, appSecret, appAccessType):
         apiUtils.synthesize(self, "appKey", appKey)
         apiUtils.synthesize(self, "appSecret", appSecret)
@@ -22,7 +20,7 @@ class Dropbox(object):
             self._accessKey, self._accessSecret = token_file.read().split('|')
         
     def _saveToken(self, key, secret):
-        print self._tokenPath
+        print(self._tokenPath)
         with open(self._tokenPath.caseSensative(), 'w') as token_file :
             token_file.write("%s|%s" % (key,secret) )
     
@@ -33,9 +31,9 @@ class Dropbox(object):
         url = sess.build_authorize_url(request_token)
 
         # Make the user sign in and authorize this token
-        print "Please visit this website and press the 'Allow' button, then hit 'Enter' here."
-        print "url:", url
-        raw_input()
+        print("Please visit this website and press the 'Allow' button, then hit 'Enter' here.")
+        print("url:", url)
+        input()
         
         access_token = sess.obtain_access_token(request_token)
         self._accessKey = access_token.key

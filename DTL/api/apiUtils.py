@@ -10,12 +10,14 @@ import subprocess
 import inspect
 import string
 import json
-import cStringIO
+import io
 import operator
 from functools import wraps
 
 
 from DTL.api import Path
+import collections
+from functools import reduce
 
 #------------------------------------------------------------
 def random_string(length=10):
@@ -63,15 +65,14 @@ def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
                                  len(delim)*(len(maxWidths)-1))
     # select the appropriate justify method
     justify = {'center':str.center, 'right':str.rjust, 'left':str.ljust}[justify.lower()]
-    output=cStringIO.StringIO()
-    if separateRows: print >> output, rowSeparator
+    output=io.StringIO()
+    if separateRows: print(rowSeparator, file=output)
     for physicalRows in logicalRows:
         for row in physicalRows:
-            print >> output, \
-                  prefix \
+            print(prefix \
                   + delim.join([justify(str(item),width) for (item,width) in zip(row,maxWidths)]) \
-                  + postfix
-        if separateRows or hasHeader: print >> output, rowSeparator; hasHeader=False
+                  + postfix, file=output)
+        if separateRows or hasHeader: print(rowSeparator, file=output); hasHeader=False
     return output.getvalue()
 
 #------------------------------------------------------------
@@ -171,7 +172,7 @@ def isBinary(filepath):
     #------------------------------------------------------------
     def isBinaryString(filepath):
         """File is considered to be binary if the data is binary."""
-        textchars = ''.join(map(chr, [7,8,9,10,12,13,27] + range(0x20, 0x100)))
+        textchars = ''.join(map(chr, [7,8,9,10,12,13,27] + list(range(0x20, 0x100))))
         string_test = lambda bytes: bool(bytes.translate(None, textchars))
         return string_test(open(filepath).read(1024))
 
@@ -191,14 +192,14 @@ def quickReload(modulename):
     expr = re.compile( str(modulename).replace( '.', '\.' ).replace( '*', '[A-Za-z0-9_]*' ) )
 
     # reload longer chains first
-    keys = sys.modules.keys()
+    keys = list(sys.modules.keys())
     keys.sort()
     keys.reverse()
 
     for key in keys:
         module = sys.modules[key]
         if ( expr.match(key) and module != None ):
-            print 'reloading', key
+            print('reloading', key)
             reload( module )
 
 
@@ -292,7 +293,7 @@ def runFile( filepath, basePath=None, cmd=None, debug=False ):
         try:
             status = os.startfile(filepath)
         except:
-            print 'runFile cannot run type (*{0})'.format(filepath.ext)
+            print('runFile cannot run type (*{0})'.format(filepath.ext))
 
     return status
 
@@ -376,26 +377,26 @@ def Launch(ctor, modal=False):
 #------------------------------------------------------------	
 def inspectMethod(item):
     """Prints useful information about given python method."""
-    print '#------------------------------------------------------------'
-    print 'Inspect Python Object'
+    print('#------------------------------------------------------------')
+    print('Inspect Python Object')
     if hasattr(item, '__name__'):
-        print "NAME:    ", item.__name__
+        print("NAME:    ", item.__name__)
     if hasattr(item, '__class__'):
-        print "TYPE:    ", item.__class__.__name__
+        print("TYPE:    ", item.__class__.__name__)
         #This should probably use inspect to check if its a method or function
         if item.__class__.__name__ in ['instancemethod','function'] :
-            print "ARGS:    ", inspect.getargspec(item)[0]
-        print "METHODS: ", dir(item)
-    print "ID:      ", id(item)
-    print "CALLABLE:", "yes" if callable(item) else "No"
-    print "VALUE:   ", repr(item)
-    print "DOC:     ", getattr(item, '__doc__') if hasattr(item, '__doc__') else ""
-    print '#------------------------------------------------------------'
+            print("ARGS:    ", inspect.getargspec(item)[0])
+        print("METHODS: ", dir(item))
+    print("ID:      ", id(item))
+    print("CALLABLE:", "yes" if isinstance(item, collections.Callable) else "No")
+    print("VALUE:   ", repr(item))
+    print("DOC:     ", getattr(item, '__doc__') if hasattr(item, '__doc__') else "")
+    print('#------------------------------------------------------------')
     
 #------------------------------------------------------------
 def getClassName(x):
-    if not isinstance(x, basestring):
-        if type(x) in [types.FunctionType, types.TypeType, types.ModuleType] :
+    if not isinstance(x, str):
+        if type(x) in [types.FunctionType, type, types.ModuleType] :
             return x.__name__
         else:
             return x.__class__.__name__
@@ -404,7 +405,7 @@ def getClassName(x):
 
 #------------------------------------------------------------
 def print_json(data):
-    print json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+    print(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
 
 #------------------------------------------------------------
 class requires(object):

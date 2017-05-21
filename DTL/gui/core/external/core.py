@@ -6,9 +6,8 @@ from DTL.conf import settings
 
 #------------------------------------------------------------
 #------------------------------------------------------------
-class Core(object):
+class Core(object, metaclass=loggingUtils.LoggingMetaclass):
     '''Tool Environment Core'''
-    __metaclass__ = loggingUtils.LoggingMetaclass
     EnvironmentTypes = Enum("External","Maya","Max","MotionBuilder")
     
     _instance = None

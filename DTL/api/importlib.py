@@ -1,6 +1,6 @@
 # Taken from Python 2.7 with permission from/by the original author.
 import sys
-import __builtin__
+import builtins
 import copy
 
 BLACKLIST = ["unittest", "logging", "warnings"]
@@ -64,7 +64,7 @@ class RollbackImporter(object):
         
     #------------------------------------------------------------
     def _import(self, name, globals=None, locals=None, fromlist=[], level = -1):
-        result = apply(self.realImport, (name, globals, locals, fromlist))
+        result = self.realImport(*(name, globals, locals, fromlist))
         
         if len(name) <= len(result.__name__):
             name = copy.copy(result.__name__)
@@ -84,17 +84,17 @@ class RollbackImporter(object):
     #------------------------------------------------------------
     def install(self):
         self.previousModules = sys.modules.copy()
-        self.realImport = __builtin__.__import__
-        __builtin__.__import__ = self._import
+        self.realImport = builtins.__import__
+        builtins.__import__ = self._import
         self.newModules = []
     
     #------------------------------------------------------------
     def uninstall(self):
         for modname in self.newModules:
-            if not self.previousModules.has_key(modname):
+            if modname not in self.previousModules:
                 # Force reload when modname next imported
                 del(sys.modules[modname])
-        __builtin__.__import__ = self.realImport
+        builtins.__import__ = self.realImport
     
     #------------------------------------------------------------
     def restart(self):

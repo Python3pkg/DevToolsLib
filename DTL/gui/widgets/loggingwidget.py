@@ -168,8 +168,8 @@ class LoggingWidget(QtGui.QTextEdit):
         logging.CRITICAL: ('critical', resources.find('img/log/critical.png')),
     }
     
-    messageLogged       = QtCore.Signal(int, unicode)
-    pythonMessageLogged = QtCore.Signal(int, unicode)
+    messageLogged       = QtCore.Signal(int, str)
+    pythonMessageLogged = QtCore.Signal(int, str)
         
     def __init__(self, parent=None, overrideStdOut=False, overrideStdErr=False):
         super(LoggingWidget, self).__init__(parent)
@@ -325,7 +325,7 @@ class LoggingWidget(QtGui.QTextEdit):
         if ( not self.isLoggingEnabled(level) ):
             return False
         
-        msg = self._blankCache + unicode(msg)
+        msg = self._blankCache + str(msg)
         if msg.endswith('\n'):
             self._blankCache = '\n'
             msg = msg[:-1]
@@ -456,12 +456,12 @@ if __name__ == '__main__':
     logger.critical('Critical')
     logger.fatal('Fatal')
     
-    print 'This is a test message'
-    print "here"
+    print('This is a test message')
+    print("here")
 
     loggerwidget.show()
     Core.Start()
     
-    print 'This is a test message 2'
-    print "Here"
+    print('This is a test message 2')
+    print("Here")
     

@@ -1,2 +1,2 @@
 from .app import App
-import djangoUtils
+from . import djangoUtils

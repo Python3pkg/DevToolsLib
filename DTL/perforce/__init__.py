@@ -1,1 +1,1 @@
-from client import P4Client
+from .client import P4Client

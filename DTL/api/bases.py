@@ -79,14 +79,14 @@ class BaseDict(BaseStruct, dict):
         
     #------------------------------------------------------------
     def _set_data(self, datadict):
-        for key, value in datadict.items():
+        for key, value in list(datadict.items()):
             self.__setitem__(key, value)
             
     #------------------------------------------------------------
     def set_default(self, default={}):
         '''Allows the user to specify default values that should appear in the data'''
-        for key, value in default.items():
-            if not self.has_key(key):
+        for key, value in list(default.items()):
+            if key not in self:
                 self.__setitem__(key, eval(value))
                 
     #------------------------------------------------------------

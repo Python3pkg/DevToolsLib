@@ -22,10 +22,10 @@ class Process(object):
     #------------------------------------------------------------
     def prompt_loop(self):
         while self.isPromptloopAlive:
-            user_input = raw_input('Prompt>>>')
+            user_input = input('Prompt>>>')
             
             #DEBUG
-            print "UserInput: {0}".format(user_input)
+            print("UserInput: {0}".format(user_input))
             #DEBUG
             
             if self.handle_input_defaults(user_input):

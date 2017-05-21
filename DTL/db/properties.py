@@ -25,7 +25,7 @@ def validateString(value,
     """
     if value is None and empty_ok:
         return
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         raise ValueError('%s should be a string; received %s (a %s):' %
                          (name, value, typename(value)))
     if not value and not empty_ok:
@@ -51,7 +51,7 @@ def validateInteger(value,
     """
     if value is None and empty_ok:
         return
-    if not isinstance(value, (int, long)):
+    if not isinstance(value, int):
         raise ValueError('%s should be an integer; received %s (a %s).' %
                          (name, value, typename(value)))
     if not value and not zero_ok:
@@ -71,7 +71,7 @@ class _CoercingProperty(BaseProperty):
         """Coerce values (except None) to self.data_type."""
         value = super(_CoercingProperty, self).validate(value)
         if value is not None and not isinstance(value, self.data_type):
-            if self.data_type == basestring :
+            if self.data_type == str :
                 value = str(value)
             else:
                 value = self.data_type(value)
@@ -81,7 +81,7 @@ class _CoercingProperty(BaseProperty):
 #------------------------------------------------------------
 class StringProperty(_CoercingProperty):
     """A textual property, which can be multi- or single-line."""
-    data_type = basestring
+    data_type = str
     #------------------------------------------------------------
     def __init__(self, multiline=False, **kwds):
         super(StringProperty, self).__init__(**kwds)
@@ -150,11 +150,11 @@ class BooleanProperty(_CoercingProperty):
 #------------------------------------------------------------
 class ListProperty(BaseProperty):
     data_type = list
-    allowed_types = set([basestring,str,unicode,bool,int,long,float,list,tuple])
+    allowed_types = set([str,str,str,bool,int,int,float,list,tuple])
     #------------------------------------------------------------
     def __init__(self, item_type, default=None, **kwds):
         if item_type is str:
-            item_type = basestring
+            item_type = str
         if not isinstance(item_type, type):
             raise TypeError('Item type should be a type object')       
         if item_type not in self.allowed_types:
@@ -201,14 +201,14 @@ class ListProperty(BaseProperty):
           ValueError if the list has items are not instances of the
           reference_class given to the constructor.
         """
-        if self.item_type in (int, long):
-            item_type = (int, long)
+        if self.item_type in (int, int):
+            item_type = (int, int)
         else:
             item_type = self.item_type
 
         for item in value:
             if not isinstance(item, item_type):
-                if item_type == (int, long):
+                if item_type == (int, int):
                     raise BadValueError('Items in the %s list must all be integers.' %
                                         self.name)
                 else:

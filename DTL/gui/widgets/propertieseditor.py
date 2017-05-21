@@ -33,7 +33,7 @@ class PropertiesEditor(QtGui.QWidget, BaseGUI):
         self.mainLayout.addWidget(self.main_splitter)
         self.main_splitter.setSizes([150,250])     
         self.setEditors()
-        for key, editor in self.editors.items() :
+        for key, editor in list(self.editors.items()) :
             self.properties_layout.addWidget(editor)
             editor.setVisible(False)
         
@@ -49,7 +49,7 @@ class PropertiesEditor(QtGui.QWidget, BaseGUI):
     def setProxyModel(self, proxyModel):
         self._proxyModel = proxyModel
         self.treeView.setModel(proxyModel)
-        for editor in self.editors.values() :
+        for editor in list(self.editors.values()) :
             editor.setProxyModel(proxyModel)
     
     #------------------------------------------------------------
@@ -57,7 +57,7 @@ class PropertiesEditor(QtGui.QWidget, BaseGUI):
         self._model = model
         self.treeView.setModel(model)
         self.treeView.selectionModel().selectionChanged.connect(self.selectionChanged)
-        for editor in self.editors.values() :
+        for editor in list(self.editors.values()) :
             editor.setModel(model)
             
     #------------------------------------------------------------
@@ -72,7 +72,7 @@ class PropertiesEditor(QtGui.QWidget, BaseGUI):
             
     #------------------------------------------------------------
     def clearSelection(self):
-        for editor in self.editors.values():
+        for editor in list(self.editors.values()):
             editor.setVisible(False)          
     
     #------------------------------------------------------------
@@ -86,7 +86,7 @@ class PropertiesEditor(QtGui.QWidget, BaseGUI):
         if node is None :
             return
         
-        for editor in self.editors.values():
+        for editor in list(self.editors.values()):
             editor.setSelection(index)
             
         for item in node.__class__.__mro__ :

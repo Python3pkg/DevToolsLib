@@ -22,7 +22,7 @@ class ObjSelData(BaseDict):
     #--------------------------------------------------------
     def __init__(self, *args, **kwds):
         #For each type of component add list var for it
-        for compPrefix in ObjSelData._compPrefixes.values():
+        for compPrefix in list(ObjSelData._compPrefixes.values()):
             self.__setitem__(compPrefix, [])
         super(ObjSelData, self).__init__(*args, **kwds)
     
@@ -121,7 +121,7 @@ class Selection(BaseDict):
         #Handle Components whose mesh is hilited
         sel_comps = []
         clean_set = set()
-        for compType in ObjSelData._filterExpandMap.values():
+        for compType in list(ObjSelData._filterExpandMap.values()):
             sel_comps += cmds.filterExpand(ex=0,fp=1,sm=compType) or []
         for item in sel_comps:
             shape = item.split('.')[0]
@@ -135,7 +135,7 @@ class Selection(BaseDict):
     
     #--------------------------------------------------------
     def clear(self):
-        for key in self.keys():
+        for key in list(self.keys()):
             self.pop(key, None)
 
     #--------------------------------------------------------
@@ -150,7 +150,7 @@ class Selection(BaseDict):
     def restoreSelection(self):
         '''Restores the selection back to how it was when the class populated its selection data'''
         cmds.select(cl=1)
-        for obj in self.keys():
+        for obj in list(self.keys()):
             cmds.select(obj,add=1)
             self.select(obj, 0, 0, addVal=1)
             self.select(obj, 1, 0, addVal=1)
@@ -160,7 +160,7 @@ class Selection(BaseDict):
     #--------------------------------------------------------
     def getFirstMesh(self):
         '''Returns the first mesh it finds in the selection list'''
-        for item in self.keys() :
+        for item in list(self.keys()) :
             if cmds.listRelatives(item,s=1) :
                 return item
 

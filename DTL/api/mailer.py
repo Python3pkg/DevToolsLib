@@ -61,7 +61,7 @@ class Mailer(object):
         msgAlternative.attach(MIMEText(textMsg))
         msgAlternative.attach(MIMEText(htmlMsg,'html'))
 
-        for name, filePath in attachments.items():
+        for name, filePath in list(attachments.items()):
             msgAttachment = MIMEBase('application', "octet-stream")
             msgAttachment.set_payload( open(filePath,"rb").read() )
             Encoders.encode_base64(msgAttachment)

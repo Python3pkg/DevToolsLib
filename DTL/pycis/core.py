@@ -22,9 +22,8 @@ class pycisArgumentParser(ArgumentParser):
             self._print_message(message, sys.stderr)
         raise self.__class__.ArgParseError()
 
-class pyCis(object):
+class pyCis(object, metaclass=loggingUtils.LoggingMetaclass):
     '''pyCis - Python Console Intelligence System'''
-    __metaclass__ = loggingUtils.LoggingMetaclass
     
     #------------------------------------------------------------
     def __init__(self):
@@ -82,7 +81,7 @@ class pyCis(object):
     #------------------------------------------------------------
     def _setupCommands(self):
         subparsers = self.parser().add_subparsers()
-        for name, module_name in self._getCommands().items():
+        for name, module_name in list(self._getCommands().items()):
             
             instance = self.loadCommandClass(name, module_name)
             parser = subparsers.add_parser(name, add_help=instance.helpFlag(), description=instance.__doc__)
@@ -91,7 +90,7 @@ class pyCis(object):
     #------------------------------------------------------------
     def _mainloop(self):
         while True:
-            line = raw_input('pyCis >> ')
+            line = input('pyCis >> ')
             args = self.parser().parse_args(line.split())
             if args:
                 args.func(args)
@@ -102,10 +101,10 @@ class pyCis(object):
         
     #------------------------------------------------------------
     def print_command_help(self, commandName):
-        for name, module_name in self.commands().items():
+        for name, module_name in list(self.commands().items()):
             if name == commandName :
                 instance = self.loadCommandClass(name, module_name)
-                print instance.__doc__
+                print(instance.__doc__)
     
     #------------------------------------------------------------
     def run(self):

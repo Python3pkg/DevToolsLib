@@ -91,14 +91,14 @@ class GraphicsSceneModel(QtGui.QGraphicsScene):
     
     #------------------------------------------------------------
     def disableItems(self):
-        for item in self.items():
+        for item in list(self.items()):
             item.setVisible(False)
             item.setEnabled(False)
     
     #------------------------------------------------------------
     def modelIndexToSceneItem(self, index):
         index = index
-        for item in self.items() :
+        for item in list(self.items()) :
             if self.compareIndexes(index, item.getIndex()) :
                 return item
         

@@ -2,7 +2,7 @@
 # http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
 
 import threading
-import Queue
+import queue
 import atexit
 import os
 import signal
@@ -35,13 +35,12 @@ class DaemonThread(threading.Thread):
 
 #------------------------------------------------------------
 #------------------------------------------------------------
-class Daemon(object):
+class Daemon(object, metaclass=loggingUtils.LoggingMetaclass):
     """
     A generic daemon class.
     
     Usage: subclass the Daemon class and override the mainloop() and shutdown() method
     """
-    __metaclass__ = loggingUtils.LoggingMetaclass
     #------------------------------------------------------------
     def __init__(self, serviceName, pidfile, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL):
         super(Daemon, self).__init__()
@@ -65,7 +64,7 @@ class Daemon(object):
             if pid > 0:
                 # exit first parent
                 sys.exit(0)
-        except OSError, e:
+        except OSError as e:
             sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
             sys.exit(1)
         
@@ -80,7 +79,7 @@ class Daemon(object):
             if pid > 0:
                 # exit from second parent
                 sys.exit(0)
-        except OSError, e:
+        except OSError as e:
             sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
             sys.exit(1)
         
@@ -166,13 +165,13 @@ class Daemon(object):
             while 1:
                 os.kill(pid, signal.SIGTERM)
                 time.sleep(0.1)
-        except OSError, err:
+        except OSError as err:
             err = str(err)
             if err.find("No such process") > 0:
                 if os.path.exists(self._pidfile):
                     os.remove(self._pidfile)
             else:
-                print str(err)
+                print(str(err))
                 sys.exit(1)
                 
     #------------------------------------------------------------

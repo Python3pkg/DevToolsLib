@@ -78,6 +78,6 @@ class LoginWidget(Dialog):
     
 
 if __name__ == "__main__":
-    print LoginWidget.getCredentials(loginMsg='This is my test message.')
+    print(LoginWidget.getCredentials(loginMsg='This is my test message.'))
     
     

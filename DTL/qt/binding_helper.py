@@ -30,7 +30,7 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import __builtin__
+import builtins
 import os
 import sys
 
@@ -100,7 +100,7 @@ def _register_binding_module(module_name, module):
 def _named_import(name):
     parts = name.split('.')
     assert(len(parts) >= 2)
-    module = __builtin__.__import__(name)
+    module = builtins.__import__(name)
     for m in parts[1:]:
         module = module.__dict__[m]
     module_name = parts[-1]
@@ -156,9 +156,9 @@ def _load_pyqt(required_modules, optional_modules):
         from PyQt4 import QtCore
         if ptr is None:
             return None
-        ptr = long(ptr) #Ensure type
+        ptr = int(ptr) #Ensure type
         base = QtCore.QObject
-        return sip.wrapinstance(long(ptr), base)
+        return sip.wrapinstance(int(ptr), base)
 
     global _loadUi
 
@@ -204,9 +204,9 @@ def _load_pyside(required_modules, optional_modules):
         from PySide import QtCore, QtGui
         if ptr is None:
             return None
-        ptr = long(ptr) #Ensure type
+        ptr = int(ptr) #Ensure type
         if base is None:
-            qObj = shiboken.wrapInstance(long(ptr), QtCore.QObject)
+            qObj = shiboken.wrapInstance(int(ptr), QtCore.QObject)
             metaObj = qObj.metaObject()
             cls = metaObj.className()
             superCls = metaObj.superClass().className()
@@ -216,7 +216,7 @@ def _load_pyside(required_modules, optional_modules):
                 base = getattr(QtGui, superCls)
             else:
                 base = QtGui.QWidget
-        return shiboken.wrapInstance(long(ptr), base)
+        return shiboken.wrapInstance(int(ptr), base)
 
 
     global _loadUi

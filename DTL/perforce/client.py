@@ -39,7 +39,7 @@ class P4Client(object):
         
         try:
             self.p4Conn.run_login()
-        except P4Exception, e:
+        except P4Exception as e:
             self.setP4User(None)
             self.setP4Password(None)
             self._tryCredentials(msg='P4 Login Invalid!', force=True)
@@ -59,7 +59,7 @@ class P4Client(object):
             return
         
         #Set the env's for next time
-        if not os.environ.has_key('P4CLIENT'):
+        if 'P4CLIENT' not in os.environ:
             apiUtils.setEnv('P4CLIENT', self.p4Client)
         
         self.p4Conn.client = self.p4Client
@@ -77,7 +77,7 @@ class P4Client(object):
             return
         
         #Set the env's for next time
-        if not os.environ.has_key('P4PORT'):
+        if 'P4PORT' not in os.environ:
             apiUtils.setEnv('P4PORT', self.p4Port)
         
         self.p4Conn.port = self.p4Port
@@ -86,8 +86,8 @@ class P4Client(object):
         #Grab p4Info
         p4info = self.p4Conn.run("info")[0] # Run "p4 info" (returns a dict)
         if self.verbose :
-            for key, value in p4info.items() :
-                print key, '\t', value
+            for key, value in list(p4info.items()) :
+                print(key, '\t', value)
         #Test Connection
         if not self.p4Conn.connected() :
             raise P4Exception('Unable to validate p4 connection.')
@@ -158,7 +158,7 @@ class P4Client(object):
             workspace_name = workspace_name.replace(" ","_")
         
         client_spec = self.p4Conn.fetch_client(workspace_name)
-        if not client_spec.has_key('Update') or not client_spec.has_key('Access') : #NEW WORKSPACE
+        if 'Update' not in client_spec or 'Access' not in client_spec : #NEW WORKSPACE
             drives = apiUtils.getDrives()
             success, choice = ChoiceWidget.getChoice(msg='Please specify a drive location for this P4 workspace.', choices=drives)
             if not success:
@@ -171,4 +171,4 @@ class P4Client(object):
     
 if __name__ == '__main__':
     p4 = P4Client()
-    print p4.getChangeDescription(5688)
+    print(p4.getChangeDescription(5688))

@@ -9,8 +9,7 @@ from DTL.api import loggingUtils, threadlib, Path
 
 #------------------------------------------------------------
 #------------------------------------------------------------
-class PreAndPost(object):
-    __metaclass__ = loggingUtils.LoggingMetaclass
+class PreAndPost(object, metaclass=loggingUtils.LoggingMetaclass):
     def __init__(self, func):
         self.func = func
         wraps(func)(self)

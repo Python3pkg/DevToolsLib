@@ -124,11 +124,11 @@ class ColorSet(object):
         xelem.set('name', self.name())
         xelem.set('colorGroups', ','.join(self.colorGroups()))
 
-        for colorName, colors in self._colors.items():
+        for colorName, colors in list(self._colors.items()):
             xcolor = ElementTree.SubElement(xelem, 'color')
             xcolor.set('name', colorName)
 
-            for colorGroup, color in colors.items():
+            for colorGroup, color in list(colors.items()):
                 xcolorval = ElementTree.SubElement(xcolor, 'value')
                 xcolorval.set('group', colorGroup)
                 xcolorval.set('red',    str(color.red()))
@@ -206,8 +206,8 @@ class PaletteColorSet(ColorSet):
         """
         palette = QtGui.QPalette()
 
-        for colorGroup, qColorGroup in self.GroupMapping.items():
-            for colorRole, qColorRole in self.RoleMapping.items():
+        for colorGroup, qColorGroup in list(self.GroupMapping.items()):
+            for colorRole, qColorRole in list(self.RoleMapping.items()):
                 color = self.color(colorRole, colorGroup)
 
                 palette.setColor( qColorGroup,
@@ -222,7 +222,7 @@ class PaletteColorSet(ColorSet):
         :param      palette | <QPalette>
         """
 
-        for colorGroup, qColorGroup in self.GroupMapping.items():
-            for colorRole, qColorRole in self.RoleMapping.items():
+        for colorGroup, qColorGroup in list(self.GroupMapping.items()):
+            for colorRole, qColorRole in list(self.RoleMapping.items()):
                 color = palette.color( qColorGroup, qColorRole )
                 self.setColor( colorRole, color, colorGroup )

@@ -70,7 +70,7 @@ def handleRemoveReadOnly(func, path, exc):
 
 #------------------------------------------------------------
 #------------------------------------------------------------
-class Path(unicode):
+class Path(str):
     """ Represents a filesystem path.
 
     For documentation on individual methods, consult their
@@ -79,7 +79,7 @@ class Path(unicode):
     module = os.path #The module to use for path operations.
     _branch = None
     def __new__(cls, value):
-        if not isinstance(value, basestring):
+        if not isinstance(value, str):
             raise TypeError("path must be a string")
         value = value.replace('\\',os.sep)
         value = value.replace('/',os.sep)
@@ -100,7 +100,7 @@ class Path(unicode):
     @classmethod
     def getcwd(cls):
         """ Return the current working directory as a path object. """
-        return cls(os.getcwdu())
+        return cls(os.getcwd())
     
     @classmethod
     def getHomeDir(cls):
@@ -128,7 +128,7 @@ class Path(unicode):
         except TypeError:  # Python bug
             return NotImplemented
     def __radd__(self, other):
-        if not isinstance(other, basestring):
+        if not isinstance(other, str):
             return NotImplemented
         return self._next_class(other.__add__(self))
     def __div__(self, rel):
@@ -424,14 +424,14 @@ class Path(unicode):
     def rmdir(self):
         try:
             os.rmdir(self.dir())
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.ENOTEMPTY and e.errno != errno.EEXIST:
                 raise
     #------------------------------------------------------------
     def removedirs(self):
         try:
             os.removedirs(self.dir())
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.ENOTEMPTY and e.errno != errno.EEXIST:
                 raise
 
@@ -446,7 +446,7 @@ class Path(unicode):
     def rmtree(self):
         try:
             shutil.rmtree(self, ignore_errors=False, onerror=handleRemoveReadOnly)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.ENOENT:
                 raise   
 
@@ -462,9 +462,9 @@ class Path(unicode):
     def remove(self):
         try:
             os.remove(self)
-        except OSError, e:
+        except OSError as e:
             if e.errno == errno.EACCES:
-                self.chmod(0777)
+                self.chmod(0o777)
                 os.remove(self)
             if e.errno != errno.ENOENT:
                 raise

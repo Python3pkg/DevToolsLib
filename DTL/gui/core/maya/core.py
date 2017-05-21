@@ -19,7 +19,7 @@ class MayaCore(Core):
     def __init__(self):
         super(MayaCore, self).__init__()
         self.setEnvironment(Core.EnvironmentTypes.Maya)
-        print sys.path
+        print(sys.path)
     
     #------------------------------------------------------------
     def setupLogging(self):
@@ -127,4 +127,4 @@ class MayaCore(Core):
         if ptr is None:
             ptr = OM_UI.MQtUtil.findMenuItem(mayaUiName)
         if ptr is not None:
-            return sip.wrapinstance(long(ptr), QtCore.QObject)
+            return sip.wrapinstance(int(ptr), QtCore.QObject)

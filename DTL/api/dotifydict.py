@@ -13,7 +13,7 @@ class DotifyDict(BaseDict):
             myKey, restOfKey = key.split('.', 1)
             target = self.set_default(myKey, DotifyDict())
             if not isinstance(target, DotifyDict):
-                raise KeyError, 'cannot set "{0}" in "{1}" ({2})'.format(restOfKey, myKey, repr(target))
+                raise KeyError('cannot set "{0}" in "{1}" ({2})'.format(restOfKey, myKey, repr(target)))
             target[restOfKey] = value
         else:
             if isinstance(value, dict) and not isinstance(value, DotifyDict):
@@ -27,7 +27,7 @@ class DotifyDict(BaseDict):
         myKey, restOfKey = key.split('.', 1)
         target = dict.__getitem__(self, myKey)
         if not isinstance(target, DotifyDict):
-            raise KeyError, 'cannot get "{0}" in "{1}" ({2})'.format(restOfKey, myKey, repr(target))
+            raise KeyError('cannot get "{0}" in "{1}" ({2})'.format(restOfKey, myKey, repr(target)))
         return target[restOfKey]
     
     #------------------------------------------------------------
@@ -46,7 +46,7 @@ class DotifyDict(BaseDict):
             return self.__getitem__(key)
         except KeyError:
             return default
-        except Exception, e:
+        except Exception as e:
             raise Exception(e)
     
     #------------------------------------------------------------

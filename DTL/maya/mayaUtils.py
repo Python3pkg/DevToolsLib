@@ -27,8 +27,8 @@ def toggleIsolateSelected():
         else :
             cmds.isolateSelect(panel,s=1)
             cmds.isolateSelect(panel,addSelected=1)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
     finally:
         cmds.undoInfo(swf=1)
 
@@ -62,8 +62,8 @@ def manipMoveToggle():
             cmds.manipMoveContext('Move',e=1,mode=2)
         else:
             cmds.manipMoveContext('Move',e=1,mode=0)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
 
 #------------------------------------------------------------
 def manipRotateToggle():
@@ -75,8 +75,8 @@ def manipRotateToggle():
             cmds.manipRotateContext('Rotate',e=1,mode=2)
         else:
             cmds.manipRotateContext('Rotate',e=1,mode=0)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
 
 #------------------------------------------------------------
 def toggleShadedWireframe():
@@ -89,13 +89,13 @@ def toggleShadedWireframe():
 def componentWrapper( command ):
     '''Wrapper for mel commands that don't work on components selected across multiple objects'''
     sel = selection()
-    for obj in sel.selection.keys() :
+    for obj in list(sel.selection.keys()) :
         for compList in [compList for compList in sel.selection[obj] if compList != None] :
             try: 
                 partial(eval("cmds." + command),*compList)()
             except Exception:
                 traceback.print_exc()
-                print "Component Wrapper Fail"
+                print("Component Wrapper Fail")
     cmds.select(cl=1)
 
 #------------------------------------------------------------
@@ -128,7 +128,7 @@ def getFaceArea(faceNum=None):
                 area = om.MScriptUtil(areaPtr).asDouble()
                 totalFaceArea = area # use only user specified face for total area
 
-        iterPolys.next()
+        next(iterPolys)
 
     return totalFaceArea
 
@@ -161,7 +161,7 @@ def smartNormals(reverse=0):
     cmds.undoInfo( ock=1 )
     try:
         sel = selection()
-        edgeLengthList = getEdgeLengths(sel.selection.keys())
+        edgeLengthList = getEdgeLengths(list(sel.selection.keys()))
         for key in sorted(edgeLengthList, reverse=1):
             key = key[-1]
             #Find the dag node name to be used in the polyNormalPerVertex command
@@ -189,7 +189,7 @@ def smartNormals(reverse=0):
                     else:
                         largerFace , smallerFace = face2Num , face1Num
 
-                print "larger face - " + str(largerFace) + "  || smaller face - " + str(smallerFace)
+                print("larger face - " + str(largerFace) + "  || smaller face - " + str(smallerFace))
                 #For the two verts attached to the edge set the smaller faces vertex normals to the cooresponding larger faces vertex normals
                 #This command is run on the vertex per face so that we can set each one independantly
                 #EXAMPLE: We run it on pCube1.vtxFace [0] [1]  which only sets the vertex 0 attached to face 1
@@ -200,9 +200,9 @@ def smartNormals(reverse=0):
                     normal = cmds.polyNormalPerVertex((dagName + '.vtxFace[' + str(vertNum) + '][' + str(largerFace) + ']'),q=1,xyz=1)
                     #Set the smaller faces cooresponding vertex normal
                     cmds.polyNormalPerVertex((dagName + '.vtxFace[' + str(vertNum) + '][' + str(smallerFace) + ']'),xyz=normal)
-                    print "cmds.polyNormalPerVertex((" + dagName + '.vtxFace[' + str(vertNum) + '][' + str(smallerFace) + ']),xyz=' + str(normal) + ')'
+                    print("cmds.polyNormalPerVertex((" + dagName + '.vtxFace[' + str(vertNum) + '][' + str(smallerFace) + ']),xyz=' + str(normal) + ')')
         sel.restoreSelection()
-    except Exception, e:
+    except Exception as e:
         traceback.print_exc()
     finally:
         #Don't Forget to close the undo que chunk

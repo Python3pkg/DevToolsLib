@@ -4,10 +4,10 @@ from xml.sax.saxutils import XMLGenerator
 from xml.sax.xmlreader import AttributesImpl
 from xml.dom.minidom import parseString
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
     try:
-        from StringIO import StringIO
+        from io import StringIO
     except ImportError:
         from io import StringIO
 try:
@@ -16,11 +16,11 @@ except ImportError :
     OrderedDict = dict
 
 try:
-    _basestring = basestring
+    _basestring = str
 except NameError:
     _basestring = str
 try:
-    _unicode = unicode
+    _unicode = str
 except NameError:
     _unicode = str
 
@@ -64,14 +64,14 @@ class _DictSAXHandler(object):
     
     #------------------------------------------------------------
     def startElement(self, name, attrs):
-        attrs = self.dict_constructor(zip(attrs[0::2], attrs[1::2]))
+        attrs = self.dict_constructor(list(zip(attrs[0::2], attrs[1::2])))
         self.path.append((name, attrs or None))
         if len(self.path) > self.item_depth:
             self.stack.append((self.item, self.data))
             if self.xml_attribs:
                 attrs = self.dict_constructor(
                     (self.attr_prefix+key, value)
-                    for (key, value) in attrs.items())
+                    for (key, value) in list(attrs.items()))
             else:
                 attrs = None
             self.item = attrs or None
@@ -163,7 +163,7 @@ class XmlDocument(Document):
             cdata = None
             attrs = OrderedDict()
             children = []
-            for ik, iv in v.items():
+            for ik, iv in list(v.items()):
                 if ik == cdata_key:
                     cdata = iv
                     continue
@@ -198,7 +198,7 @@ class XmlDocument(Document):
     
     #------------------------------------------------------------
     def unparse(self, data_dict, **kwds):
-        ((key, value),) = data_dict.items()
+        ((key, value),) = list(data_dict.items())
         output = StringIO()
         content_handler = XMLGenerator(output, 'utf-8')
         content_handler.startDocument()
@@ -224,7 +224,7 @@ class XmlDocument(Document):
                 if allowNone :
                     return []
                 raise KeyError(keyErrorMsg)
-        if data.has_key(keyList[-1]) and not isinstance(data[keyList[-1]], list):
+        if keyList[-1] in data and not isinstance(data[keyList[-1]], list):
             data = [data[keyList[-1]]]
         else:
             data = data.get(keyList[-1],[])
@@ -232,7 +232,7 @@ class XmlDocument(Document):
         return data
     
     def print_json(self):
-        print json.dumps(self.serialize()[0], sort_keys=True, indent=4, cls=self.encoder)
+        print(json.dumps(self.serialize()[0], sort_keys=True, indent=4, cls=self.encoder))
 
 
 

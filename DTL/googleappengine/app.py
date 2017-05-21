@@ -13,5 +13,5 @@ class App(object):
                '--port=9080',
                '--admin_port=8000',
                os.path.dirname(sys.argv[0])]
-        print cmd
+        print(cmd)
         apiUtils.execute(cmd)

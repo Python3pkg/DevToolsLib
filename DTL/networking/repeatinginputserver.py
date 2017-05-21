@@ -8,18 +8,18 @@ def message_loop():
     while True:
         with myLock:
             time.sleep(1)
-            print "Interrupting text!"
+            print("Interrupting text!")
 
 def handle_input():
     myLock.acquire()
-    msg = raw_input('Prompt>>>')
+    msg = input('Prompt>>>')
     if msg == 'stop' :
         return
     if msg == 'restart' :
         myLock.release()
         loop()
         return
-    print "Received {0}".format(msg)
+    print("Received {0}".format(msg))
     myLock.release()
     loop()
 

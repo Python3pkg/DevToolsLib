@@ -20,7 +20,7 @@ def getPkgDir():
     if '__file__' in globals():
         return os.path.dirname(__file__)
     if sys.argv[0] == '' :
-        return os.getcwdu()
+        return os.getcwd()
     return os.path.dirname(sys.argv[0])
 
 SECRET_KEY = '11131986dtl11131986dtl'

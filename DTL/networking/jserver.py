@@ -191,7 +191,7 @@ if __name__ == '__main__':
         def handle_input(self, user_input):
             if user_input == 'show threads':
                 for thread in [x for x in self._threads if x.isActive()]:
-                    print thread
+                    print(thread)
             return False
     
     server = MyServerFactory(server_thread=MyFactoryThread)

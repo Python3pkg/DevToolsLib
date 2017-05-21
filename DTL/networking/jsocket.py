@@ -51,8 +51,7 @@ def getLocalIP():
 
 #------------------------------------------------------------
 #------------------------------------------------------------
-class BaseSocket(object):
-    __metaclass__ = loggingUtils.LoggingMetaclass
+class BaseSocket(object, metaclass=loggingUtils.LoggingMetaclass):
     ADDRESS_FAMILY = socket.AF_INET
     SOCKET_TYPE = socket.SOCK_STREAM
     DEFAULT_PORT = 5000

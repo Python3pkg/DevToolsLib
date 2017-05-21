@@ -11,7 +11,7 @@ site.addsitedir(os.environ.get('PYTHON_ENVIRONMENT',''))
 '''
 
 def main(*argv):
-    env = raw_input('Enter environment name:')
+    env = input('Enter environment name:')
     local_path = os.path.normpath(os.path.dirname(argv[0]))
     environment_path = os.path.join(local_path, env)
     if not os.path.exists(environment_path):
@@ -22,12 +22,12 @@ def main(*argv):
     else:
         cmd = 'export {0}={1}'
     
-    print "Setting: {0}".format('PYTHON_ENVIRONMENT')
+    print("Setting: {0}".format('PYTHON_ENVIRONMENT'))
     cmd = cmd.format('PYTHON_ENVIRONMENT',
                      environment_path)
     os.system(cmd)
     
-    if raw_input('Overwrite sitecustomize.py? y/n:') == 'y':
+    if input('Overwrite sitecustomize.py? y/n:') == 'y':
         with open(os.path.join(sys.prefix, 'Lib', 'site-packages', 'sitecustomize.py'), 'w') as file_handle:
             file_handle.write(SITECUSTOMIZE)
 
@@ -36,4 +36,4 @@ if __name__ == '__main__':
         main(sys.argv)
     except:
         traceback.print_exc()
-        raw_input("Failed!")
+        input("Failed!")

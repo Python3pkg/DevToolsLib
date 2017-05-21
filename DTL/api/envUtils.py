@@ -1,7 +1,7 @@
 from os import system, environ
 import win32con
 from win32gui import SendMessage
-from _winreg import (
+from winreg import (
     CloseKey, OpenKey, QueryValueEx, SetValueEx,
     HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE,
     KEY_ALL_ACCESS, KEY_READ, REG_EXPAND_SZ, REG_SZ

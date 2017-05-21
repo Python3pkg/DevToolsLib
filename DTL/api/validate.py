@@ -720,7 +720,7 @@ def _is_num_param(names, values, to_float=False):
     for (name, val) in zip(names, values):
         if val is None:
             out_params.append(val)
-        elif isinstance(val, (int, int, float, str)):
+        elif isinstance(val, (int, float, str)):
             try:
                 out_params.append(fun(val))
             except ValueError as e:
@@ -776,7 +776,7 @@ def is_integer(value, min=None, max=None):
     0
     """
     (min_val, max_val) = _is_num_param(('min', 'max'), (min, max))
-    if not isinstance(value, (int, int, str)):
+    if not isinstance(value, (int, str)):
         raise VdtTypeError(value)
     if isinstance(value, str):
         # if it's a string - does it represent an integer ?
@@ -827,7 +827,7 @@ def is_float(value, min=None, max=None):
     """
     (min_val, max_val) = _is_num_param(
         ('min', 'max'), (min, max), to_float=True)
-    if not isinstance(value, (int, int, float, str)):
+    if not isinstance(value, (int, float, str)):
         raise VdtTypeError(value)
     if not isinstance(value, float):
         # if it's a string - does it represent a float ?

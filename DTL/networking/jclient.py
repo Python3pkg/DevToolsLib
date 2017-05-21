@@ -19,7 +19,7 @@ class JsonClient(JsonSocket, Process):
 
     #------------------------------------------------------------
     def main_loop(self):
-        msg = raw_input('CLIENT >>> ')
+        msg = input('CLIENT >>> ')
 
         if msg == 'stop':
             self.stop()

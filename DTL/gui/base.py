@@ -95,7 +95,7 @@ class BaseGUI(object):
             if ui_file.exists() :
                 self = loadUi(ui_file, parent, self, self.customWidgets())
             else:
-                print 'Unable to load ui file | {0}'.format(ui_file)
+                print('Unable to load ui file | {0}'.format(ui_file))
                 #self.log.warning('Unable to load ui file | {0}'.format(ui_file))
                 
     def customWidgets(self):
